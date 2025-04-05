@@ -1,9 +1,11 @@
 const prisma = require("../utility/prismaLoader");
 const { hashPassword, checkPassword } = require("../utility/bcryptUtil");
+const { generateToken } = require("../utility/jwt");
 
 module.exports = {
-  signup: async (req, res) => {
+  signup: async (req, res, next) => {
     const { password, email } = req.body;
+    console.log("email");
     const hashPass = await hashPassword(password, 10);
     try {
       const newUser = await prisma.user.create({
@@ -12,16 +14,18 @@ module.exports = {
           email,
         },
       });
-      res.send("ok user created");
-      return;
+      // res.send("ok created");
+      const token = generateToken({ userId: newUser.id });
+      res.json({ token });
+      next();
     } catch (error) {
       console.log(error);
       res.send("user not saved");
-      return;
+      next();
     }
     res.send("error");
   },
-  login: async (req, res) => {
+  login: async (req, res, next) => {
     try {
       const { password, email } = req.body;
       const userFound = await prisma.user.findUnique({ where: { email } });
@@ -29,12 +33,17 @@ module.exports = {
         res.send("no such user");
       }
       const match = await checkPassword(password, userFound.password);
-      res.send(match);
-      return;
+      if (match) {
+        const token = generateToken({ userId: userFound.id });
+        res.json({ token });
+      } else {
+        res.send("invalid credentials");
+      }
+      next();
     } catch (error) {
       console.log(error);
       res.send(error);
-      return;
+      next();
     }
     res.send("error");
   },

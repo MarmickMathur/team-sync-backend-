@@ -7,6 +7,7 @@ const auth = require("./routes/auth");
 const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+const authMiddleware = require("./middleware/jwtmiddleware");
 
 app.use("/test", (req, res) => {
   res.status(200);
@@ -14,7 +15,11 @@ app.use("/test", (req, res) => {
 });
 
 app.use("/", auth);
-app.use("/", () => {
+// app.get("/testProtected", authMiddleware, (req, res) => {
+//   res.send("protected route working");
+// });
+
+app.use("/", (req, res) => {
   res.status(404);
   res.send("not found");
 });
