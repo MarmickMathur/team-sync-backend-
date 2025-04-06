@@ -15,7 +15,8 @@ module.exports = {
         },
       });
       // res.send("ok created");
-      const token = generateToken({ userId: newUser.id });
+      delete newUser.password;
+      const token = generateToken(newUser);
       res.json({ token });
       next();
     } catch (error) {
@@ -34,7 +35,8 @@ module.exports = {
       }
       const match = await checkPassword(password, userFound.password);
       if (match) {
-        const token = generateToken({ userId: userFound.id });
+        delete userFound.password;
+        const token = generateToken(userFound);
         res.json({ token });
       } else {
         res.send("invalid credentials");

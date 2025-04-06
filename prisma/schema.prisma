@@ -14,20 +14,108 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String // this will store the hashed password
-  name      String?
-  createdAt DateTime @default(now())
-  memberOf  Team[]   @relation("teamRelation")
-  leads     Team?    @relation("TeamLeader")
+  id               String             @id @default(uuid())
+  email            String             @unique
+  password         String // this will store the hashed password
+  name             String?
+  avatar           String?
+  createdAt        DateTime           @default(now())
+  createdTickets   Ticket[]           @relation("TicketsOwned")
+  assignedTickets  Ticket[]           @relation("TicketAssigned")
+  TeamUser         TeamUser[]
+  UserOrganization UserOrganization[]
 }
 
 model Team {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  members   User[]   @relation("teamRelation")
-  leader    User     @relation("TeamLeader", fields: [leaderId], references: [id])
-  leaderId  String   @unique
+  id                String              @id @default(uuid())
+  name              String
+  createdAt         DateTime            @default(now())
+  Ticket            Ticket[]            @relation("TeamAssigned")
+  Organization      Organization[]      @relation("Organizations")
+  TeamUser          TeamUser[]
+  TeamOraganization TeamOraganization[]
+}
+
+model TeamUser {
+  userId   String
+  teamId   String
+  role     TeamRoles
+  joinedAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@id([userId, teamId]) // composite primary key
+}
+
+model Ticket {
+  id          String    @id @default(uuid())
+  description String?
+  status      Status
+  created_at  DateTime  @default(now())
+  deadline    DateTime?
+  creator_id  User      @relation("TicketsOwned", fields: [creator], references: [id])
+  creator     String
+  assinged_to User      @relation("TicketAssigned", fields: [assigned], references: [id])
+  assigned    String
+  team        Team      @relation("TeamAssigned", fields: [teamId], references: [id])
+  teamId      String
+  priority    Priority
+}
+
+model Organization {
+  id                String              @id @default(uuid())
+  name              String?
+  teamsInvolved     Team[]              @relation("Organizations")
+  created_at        DateTime            @default(now())
+  TeamOraganization TeamOraganization[]
+  UserOrganization  UserOrganization[]
+}
+
+model TeamOraganization {
+  teamId         String
+  organizationId String
+  joinedAt       DateTime @default(now())
+
+  team         Team         @relation(fields: [teamId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([teamId, organizationId]) // composite primary key
+}
+
+model UserOrganization {
+  userId         String
+  organizationId String
+  joinedAt       DateTime          @default(now())
+  role           OrganizationRoles
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([userId, organizationId]) // composite primary key
+}
+
+enum Status {
+  to_do
+  in_progress
+  approval
+  done
+}
+
+enum Priority {
+  low
+  medium
+  high
+}
+
+enum OrganizationRoles {
+  owner
+  admin
+  member
+}
+
+enum TeamRoles {
+  lead
+  member
+  external_contributor
 }
