@@ -1,7 +1,6 @@
 const prisma = require("../utility/prismaLoader");
 const { hashPassword, checkPassword } = require("../utility/bcryptUtil");
 const { generateToken } = require("../utility/jwt");
-const { getOrganization } = require("./organization");
 
 module.exports = {
   patchUser: async (req, res) => {
@@ -25,12 +24,84 @@ module.exports = {
       console.error("User not found or update failed:", error);
     }
   },
+
+  //incomplete route
   getOrganization: async (req, res) => {
     const uid = req.user.id;
-    const orgs = prisma.UserOrganization.findMany({
-      where: {
-        userId: uid,
-      },
-    });
+    try {
+      const { organizations } = await prisma.user.findUnique({
+        where: {
+          id: uid,
+        },
+        include: {
+          organizations: {
+            include: {
+              organization: true,
+            },
+          },
+        },
+      });
+      const result = organizations.map((item) => ({
+        organization: item.organization,
+        role: item.role,
+      }));
+
+      res.json(result);
+    } catch (error) {
+      console.log(error);
+      res.send(error);
+    }
+  },
+
+  addOrganization: async (req, res) => {
+    const { organization_name, user_id } = req.body;
+    try {
+      const newOrganization = await prisma.organization.create({
+        data: {
+          name: organization_name,
+          members: {
+            create: {
+              user: {
+                connect: { id: user_id },
+              },
+              role: "owner",
+            },
+          },
+        },
+      });
+
+      res.status(400).json({
+        organization_id: newOrganization.id,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("error ho gaya");
+    }
+  },
+
+  getTeams: async (req, res) => {
+    const uid = req.user.id;
+    try {
+      const { teams } = await prisma.user.findUnique({
+        where: {
+          id: uid,
+        },
+        include: {
+          teams: {
+            include: {
+              team: true,
+            },
+          },
+        },
+      });
+      const result = teams.map((item) => ({
+        team: item.team,
+        role: item.role,
+      }));
+      res.json(result);
+    } catch (error) {
+      console.log(error);
+      res.send(error);
+    }
   },
 };

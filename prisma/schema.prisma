@@ -14,26 +14,26 @@ datasource db {
 }
 
 model User {
-  id               String             @id @default(uuid())
-  email            String             @unique
-  password         String // this will store the hashed password
-  name             String?
-  avatar           String?
-  createdAt        DateTime           @default(now())
-  createdTickets   Ticket[]           @relation("TicketsOwned")
-  assignedTickets  Ticket[]           @relation("TicketAssigned")
-  TeamUser         TeamUser[]
-  UserOrganization UserOrganization[]
+  id              String             @id @default(uuid())
+  email           String             @unique
+  password        String // this will store the hashed password
+  name            String?
+  avatar          String?
+  createdAt       DateTime           @default(now())
+  createdTickets  Ticket[]           @relation("TicketsOwned")
+  assignedTickets Ticket[]           @relation("TicketAssigned")
+  teams           TeamUser[]         @relation("memofTeam")
+  organizations   UserOrganization[] @relation("user")
 }
 
 model Team {
-  id                String              @id @default(uuid())
-  name              String
-  createdAt         DateTime            @default(now())
-  Ticket            Ticket[]            @relation("TeamAssigned")
-  Organization      Organization[]      @relation("Organizations")
-  TeamUser          TeamUser[]
-  TeamOraganization TeamOraganization[]
+  id            String              @id @default(uuid())
+  name          String
+  createdAt     DateTime            @default(now())
+  Ticket        Ticket[]            @relation("TeamAssigned")
+  Organization  Organization[]      @relation("Organizations")
+  members       TeamUser[]          @relation("teamofMem")
+  organizations TeamOrganization[] @relation("team")
 }
 
 model TeamUser {
@@ -42,8 +42,8 @@ model TeamUser {
   role     TeamRoles
   joinedAt DateTime  @default(now())
 
-  user User @relation(fields: [userId], references: [id])
-  team Team @relation(fields: [teamId], references: [id])
+  user User @relation("memofTeam", fields: [userId], references: [id])
+  team Team @relation("teamofMem", fields: [teamId], references: [id])
 
   @@id([userId, teamId]) // composite primary key
 }
@@ -64,21 +64,21 @@ model Ticket {
 }
 
 model Organization {
-  id                String              @id @default(uuid())
-  name              String?
-  teamsInvolved     Team[]              @relation("Organizations")
-  created_at        DateTime            @default(now())
-  TeamOraganization TeamOraganization[]
-  UserOrganization  UserOrganization[]
+  id            String              @id @default(uuid())
+  name          String?
+  teamsInvolved Team[]              @relation("Organizations")
+  created_at    DateTime            @default(now())
+  teams         TeamOrganization[] @relation("teams")
+  members       UserOrganization[]  @relation("orgs")
 }
 
-model TeamOraganization {
+model TeamOrganization {
   teamId         String
   organizationId String
   joinedAt       DateTime @default(now())
 
-  team         Team         @relation(fields: [teamId], references: [id])
-  organization Organization @relation(fields: [organizationId], references: [id])
+  team         Team         @relation("team", fields: [teamId], references: [id])
+  organization Organization @relation("teams", fields: [organizationId], references: [id])
 
   @@id([teamId, organizationId]) // composite primary key
 }
@@ -89,8 +89,8 @@ model UserOrganization {
   joinedAt       DateTime          @default(now())
   role           OrganizationRoles
 
-  user         User         @relation(fields: [userId], references: [id])
-  organization Organization @relation(fields: [organizationId], references: [id])
+  user         User         @relation("user", fields: [userId], references: [id])
+  organization Organization @relation("orgs", fields: [organizationId], references: [id])
 
   @@id([userId, organizationId]) // composite primary key
 }
