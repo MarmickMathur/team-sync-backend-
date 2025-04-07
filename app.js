@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 const auth = require("./routes/auth");
 const user = require("./routes/user");
-const orgs = require("./routes/organization")
+const orgs = require("./routes/organization");
 const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -18,7 +18,7 @@ app.use("/test", (req, res) => {
 
 app.use("/", auth);
 app.use("/user", user);
-app.use("/organization", orgs)
+app.use("/organization", orgs);
 
 app.get("/testProtected", authMiddleware, (req, res) => {
   res.send("protected route working");
