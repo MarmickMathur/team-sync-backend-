@@ -4,7 +4,7 @@ async function verifyOrg(req, res, next) {
   try {
     const uid = req.user.id;
     const oid = req.body.organization_id;
-    const { organization, user } = await prisma.userOrganization.findFirst({
+    const result = await prisma.userOrganization.findMany({
       where: {
         organizationId: oid,
         role: { in: ["owner", "admin"] }, // checking for the creator (owner)
@@ -14,7 +14,17 @@ async function verifyOrg(req, res, next) {
         organization: true, // get the organization info
       },
     });
-    if (user && uid == user.id) {
+
+    let flg = 0;
+    let organization = null;
+    for (let index = 0; index < result.length; index++) {
+      const element = result[index];
+      if (element.user.id == uid) {
+        flg = 1;
+        organization = element.organization;
+      }
+    }
+    if (flg) {
       req.organization = organization;
       next();
     } else {

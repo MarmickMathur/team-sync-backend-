@@ -1,12 +1,12 @@
 const prisma = require("../utility/prismaLoader");
 
 module.exports = {
-  getOrgRole: async (user_id, org_id) => {
-    const { role } = await prisma.userOrganization.findUnique({
+  getTeamRole: async (user_id, team_id) => {
+    const { role } = await prisma.teamUser.findUnique({
       where: {
-        userId_organizationId: {
+        userId_teamId: {
           userId: user_id,
-          organizationId: org_id,
+          teamId: team_id,
         },
       },
     });

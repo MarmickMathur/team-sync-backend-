@@ -13,6 +13,7 @@ const {
 const authMiddleware = require("../middleware/jwtmiddleware");
 const verifyOrg = require("../middleware/verifyOrg");
 
+//also add patch route for org
 router.get("/", authMiddleware, getOrganization);
 router.get("/teams", authMiddleware, getTeams);
 router.get("/members", authMiddleware, getMembers);

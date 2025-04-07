@@ -31,7 +31,6 @@ model Team {
   name          String
   createdAt     DateTime            @default(now())
   Ticket        Ticket[]            @relation("TeamAssigned")
-  Organization  Organization[]      @relation("Organizations")
   members       TeamUser[]          @relation("teamofMem")
   organizations TeamOrganization[] @relation("team")
 }
@@ -66,7 +65,6 @@ model Ticket {
 model Organization {
   id            String              @id @default(uuid())
   name          String?
-  teamsInvolved Team[]              @relation("Organizations")
   created_at    DateTime            @default(now())
   teams         TeamOrganization[] @relation("teams")
   members       UserOrganization[]  @relation("orgs")

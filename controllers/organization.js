@@ -2,17 +2,24 @@ const { getOrgRole } = require("../utility/orgUtils");
 const prisma = require("../utility/prismaLoader");
 
 module.exports = {
-  getOrganization: (req, res) => {
-    console.log("middleware working");
-    res.json(req.organization);
+  getOrganization: async (req, res) => {
+    try {
+      const organization = await prisma.Organization.findFirst({
+        where: {
+          id: req.body.organization_id,
+        },
+      });
+      res.json(organization);
+    } catch (error) {
+      console.log(error);
+      req.json(error);
+    }
   },
 
-  //incomplete route
   getTeams: async (req, res) => {
-    console.log("getting teams");
     const oid = req.body.organization_id;
     try {
-      const teams = await prisma.Organization.findFirst({
+      const { teams } = await prisma.Organization.findFirst({
         where: {
           id: oid,
         },

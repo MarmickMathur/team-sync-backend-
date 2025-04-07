@@ -120,4 +120,31 @@ module.exports = {
       res.json(error);
     }
   },
+
+  //test this pls
+  addTeam: async (req, res) => {
+    const { team_name, user_id } = req.body;
+    try {
+      const newTeam = await prisma.organization.create({
+        data: {
+          name: team_name,
+          members: {
+            create: {
+              user: {
+                connect: { id: user_id },
+              },
+              role: "lead",
+            },
+          },
+        },
+      });
+
+      res.status(400).json({
+        team_id: newTeam.id,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("error ho gaya");
+    }
+  },
 };
