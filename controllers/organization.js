@@ -170,4 +170,20 @@ module.exports = {
       res.json(error);
     }
   },
+  patchOrg: async (req, res) => {
+    try {
+      const org = await prisma.Organization.update({
+        where: {
+          id: req.organization.id,
+        },
+        data: {
+          name: req.body.name,
+        },
+      });
+      res.json(org);
+    } catch (error) {
+      console.log(error);
+      req.json(error);
+    }
+  },
 };

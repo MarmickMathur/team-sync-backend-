@@ -6,6 +6,7 @@ const {
   getMembers,
   deleteMember,
   patchMember,
+  patchTeam,
 } = require("../controllers/team");
 
 const authMiddleware = require("../middleware/jwtmiddleware");
@@ -20,5 +21,6 @@ router.post("/member", authMiddleware, verifyTeam, addMember);
 router.delete("/member", authMiddleware, verifyTeam, deleteMember);
 
 router.patch("/member", authMiddleware, verifyTeam, patchMember);
+router.patch("/", authMiddleware, verifyTeam, patchTeam);
 
 module.exports = router;

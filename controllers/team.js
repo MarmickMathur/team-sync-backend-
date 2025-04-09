@@ -1,7 +1,3 @@
-const { PrivateResultType } = require("@prisma/client/runtime/library");
-const { getOrgRole } = require("../utility/orgUtils");
-const { getTeamRole } = require("../utility/teamUtils");
-
 const prisma = require("../utility/prismaLoader");
 
 module.exports = {
@@ -90,6 +86,22 @@ module.exports = {
     } catch (error) {
       console.log(error);
       res.json(error);
+    }
+  },
+  patchTeam: async (req, res) => {
+    try {
+      const updatedTeam = await prisma.Team.update({
+        where: {
+          id: req.body.team_id,
+        },
+        data: {
+          name: req.body.name,
+        },
+      });
+      res.json(updatedTeam);
+    } catch (error) {
+      console.log(error);
+      req.json(error);
     }
   },
 };

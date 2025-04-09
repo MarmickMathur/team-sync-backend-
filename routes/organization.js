@@ -9,14 +9,14 @@ const {
   deleteMember,
   deleteTeam,
   patchMember,
+  patchOrg,
 } = require("../controllers/organization");
 const authMiddleware = require("../middleware/jwtmiddleware");
 const verifyOrg = require("../middleware/verifyOrg");
 
-//also add patch route for org
-router.get("/", authMiddleware, getOrganization);
 router.get("/teams", authMiddleware, getTeams);
 router.get("/members", authMiddleware, getMembers);
+router.get("/", authMiddleware, getOrganization);
 
 router.post("/team", authMiddleware, verifyOrg, addTeam);
 router.post("/member", authMiddleware, verifyOrg, addMember);
@@ -25,5 +25,6 @@ router.delete("/team", authMiddleware, verifyOrg, deleteTeam);
 router.delete("/member", authMiddleware, verifyOrg, deleteMember);
 
 router.patch("/member", authMiddleware, verifyOrg, patchMember);
+router.patch("/", authMiddleware, verifyOrg, patchOrg);
 
 module.exports = router;

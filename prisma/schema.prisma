@@ -27,11 +27,11 @@ model User {
 }
 
 model Team {
-  id            String              @id @default(uuid())
+  id            String             @id @default(uuid())
   name          String
-  createdAt     DateTime            @default(now())
-  Ticket        Ticket[]            @relation("TeamAssigned")
-  members       TeamUser[]          @relation("teamofMem")
+  createdAt     DateTime           @default(now())
+  Ticket        Ticket[]           @relation("TeamAssigned")
+  members       TeamUser[]         @relation("teamofMem")
   organizations TeamOrganization[] @relation("team")
 }
 
@@ -63,11 +63,11 @@ model Ticket {
 }
 
 model Organization {
-  id            String              @id @default(uuid())
-  name          String?
-  created_at    DateTime            @default(now())
-  teams         TeamOrganization[] @relation("teams")
-  members       UserOrganization[]  @relation("orgs")
+  id         String             @id @default(uuid())
+  name       String?
+  created_at DateTime           @default(now())
+  teams      TeamOrganization[] @relation("teams")
+  members    UserOrganization[] @relation("orgs")
 }
 
 model TeamOrganization {
