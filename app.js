@@ -10,7 +10,14 @@ const team = require("./routes/team");
 const ticket = require("./routes/ticket");
 const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+    method: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 const authMiddleware = require("./middleware/jwtmiddleware");
 
 app.use("/test", (req, res) => {
