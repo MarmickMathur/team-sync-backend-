@@ -17,7 +17,13 @@ module.exports = {
       // res.send("ok created");
       delete newUser.password;
       const token = generateToken(newUser);
-      res.json({ token });
+      const options = {
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+      };
+      res.status(200).cookie("authToken", token, options).json(newUser);
       next();
     } catch (error) {
       console.log(error);
@@ -37,7 +43,13 @@ module.exports = {
       if (match) {
         delete userFound.password;
         const token = generateToken(userFound);
-        res.json({ token });
+        const options = {
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "none",
+        };
+        res.status(200).cookie("authToken", token, options).json(userFound);
       } else {
         res.send("invalid credentials");
       }

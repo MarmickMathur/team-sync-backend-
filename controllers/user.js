@@ -111,7 +111,7 @@ module.exports = {
       const user = await prisma.User.findUnique({
         where: { email },
       });
-      console.log(user);
+      // console.log(user);
       delete user.password;
       if (!user) throw Error("user not found");
       res.json(user);

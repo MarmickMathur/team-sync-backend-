@@ -1,5 +1,6 @@
 const prisma = require("./utility/prismaLoader");
 const cors = require("cors");
+const cookieParse = require("cookie-parser");
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -10,6 +11,7 @@ const team = require("./routes/team");
 const ticket = require("./routes/ticket");
 const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParse());
 app.use(
   cors({
     origin: true,
