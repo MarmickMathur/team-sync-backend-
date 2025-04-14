@@ -4,7 +4,8 @@ const { generateToken } = require("../utility/jwt");
 
 module.exports = {
   signup: async (req, res, next) => {
-    const { password, email } = req.body;
+    console.log(req.body);
+    const { password, email, name } = req.body;
     console.log("email");
     const hashPass = await hashPassword(password, 10);
     try {
@@ -12,6 +13,8 @@ module.exports = {
         data: {
           password: hashPass,
           email,
+          
+          name: name??null
         },
       });
       // res.send("ok created");
