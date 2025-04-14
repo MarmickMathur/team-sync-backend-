@@ -42,11 +42,12 @@ module.exports = {
         },
       });
       const result = organizations.map((item) => ({
-        organization: item.organization,
+        id: item.organization.id,
+        name: item.organization.name,
         role: item.role,
       }));
-
-      res.json(result);
+      console.log(result);
+      res.status(200).json(result);
     } catch (error) {
       console.log(error);
       res.send(error);
