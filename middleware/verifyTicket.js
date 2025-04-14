@@ -14,10 +14,10 @@ async function verifyTicket(req, res, next) {
         assinged_to: true, // get the organization info
       },
     });
-    console.log(result);
+    // console.log(result);
     if (result) {
       const { creator, assigned } = result;
-      if (uid == creator || user.id == assigned) {
+      if (uid == creator.id || user.id == assigned.id) {
         // req.ticket = result;
         next();
         return;

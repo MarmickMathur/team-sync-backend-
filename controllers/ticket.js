@@ -1,6 +1,19 @@
 const prisma = require("../utility/prismaLoader");
 
 module.exports = {
+  getTicket: async (req, res) => {
+    try {
+      const ticket = await prisma.ticket.findFirst({
+        where: {
+          id: req.body.ticket_id,
+        },
+      });
+      res.json(ticket);
+    } catch (error) {
+      console.log(error);
+      res.json(error);
+    }
+  },
   addTicket: async (req, res) => {
     try {
       const ticket = await prisma.ticket.create({
@@ -28,7 +41,14 @@ module.exports = {
   },
   patchTicket: async (req, res) => {
     try {
-      
+      console.log(req.body.id);
+      const ticket = await prisma.ticket.update({
+        where: {
+          id: req.body.id,
+        },
+        data: req.body,
+      });
+      res.json(ticket);
     } catch (error) {
       console.log(error);
       res.json(error);
