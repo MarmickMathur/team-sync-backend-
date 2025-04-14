@@ -69,8 +69,8 @@ module.exports = {
           },
         },
       });
-
-      res.status(400).json({
+      console.log(newOrganization);
+      return res.status(200).json({
         organization_id: newOrganization.id,
       });
     } catch (error) {

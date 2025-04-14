@@ -34,7 +34,6 @@ app.get('/logout', (req, res) => {
     expires: new Date(Date.now()),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
   };
 	res.status(200).cookie('authToken', 'none', options).json({'message': "Successfully logged out"});
 });

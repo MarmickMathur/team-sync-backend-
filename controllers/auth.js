@@ -24,7 +24,6 @@ module.exports = {
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
       };
       res.status(200).cookie("authToken", token, options).json(newUser);
       next();
@@ -36,6 +35,7 @@ module.exports = {
     res.send("error");
   },
   login: async (req, res, next) => {
+    console.log(req.body);
     try {
       const { password, email } = req.body;
       const userFound = await prisma.user.findUnique({ where: { email } });
@@ -50,7 +50,6 @@ module.exports = {
           expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "none",
         };
         res.status(200).cookie("authToken", token, options).json(userFound);
       } else {
