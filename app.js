@@ -9,8 +9,9 @@ const user = require("./routes/user");
 const orgs = require("./routes/organization");
 const team = require("./routes/team");
 const ticket = require("./routes/ticket");
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cookieParse());
 app.use(
   cors({
@@ -28,6 +29,14 @@ app.use("/test", (req, res) => {
 });
 
 app.use("/", auth);
+app.get('/logout', (req, res) => {
+  const options = {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  };
+	res.status(200).cookie('authToken', 'none', options).json({'message': "Successfully logged out"});
+});
 app.use("/user", user);
 app.use("/organization", orgs);
 app.use("/team", team);
