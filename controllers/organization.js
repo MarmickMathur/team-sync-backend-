@@ -17,6 +17,59 @@ module.exports = {
       req.json(error);
     }
   },
+  getAllTickets: async (req, res) => {
+    const { organization_id } = req.query;
+    try {
+      const tickets = await prisma.ticket.findMany({
+        where: {
+          team: {
+            organizations: {
+              some: {
+                organizationId: organization_id,
+              },
+            },
+          },
+        },
+        include: {
+          creator_id: {
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              avatar: true,
+              createdAt: true,
+            },
+          },
+          assinged_to: {
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              avatar: true,
+              createdAt: true,
+            },
+          },
+          team: {
+            include: {
+              organizations: {
+                where: {
+                  organizationId: organization_id,
+                },
+                select: {
+                  joinedAt: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      console.log(tickets);
+      res.json(tickets);
+    } catch (error) {
+      console.log(error);
+      res.send(error.message);
+    }
+  },
   getInfo: async (req, res) => {
     console.log("starting here");
     const { organization_id } = req.query;

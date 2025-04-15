@@ -13,6 +13,7 @@ const {
   getTeamCount,
   getInfo,
   getMemberInfo,
+  getAllTickets,
 } = require("../controllers/organization");
 const authMiddleware = require("../middleware/jwtmiddleware");
 const verifyOrg = require("../middleware/verifyOrg");
@@ -21,8 +22,8 @@ router.get("/allteams", authMiddleware, getTeams);
 router.get("/members", authMiddleware, getMembers);
 router.get("/teamCount", authMiddleware, verifyOrg, getTeamCount);
 router.get("/dashInfo", authMiddleware, verifyOrg, getInfo);
+router.get("/allTickets", authMiddleware, getAllTickets);
 router.get("/:id", authMiddleware, verifyOrg, getMemberInfo);
-
 router.get("/", authMiddleware, getOrganization);
 
 router.post("/team", authMiddleware, verifyOrg, addTeam);
