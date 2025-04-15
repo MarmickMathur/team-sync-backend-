@@ -102,17 +102,73 @@ module.exports = {
   },
   getTeams: async (req, res) => {
     const oid = req.query.organization_id;
+    const uid = req.user.id;
     try {
-      const { teams } = await prisma.Organization.findFirst({
+      const userId = uid;
+      const organizationId = oid;
+
+      const teams = await prisma.team.findMany({
         where: {
-          id: oid,
+          organizations: {
+            some: { organizationId },
+          },
         },
-        include: {
-          teams: true,
+        select: {
+          id: true,
+          name: true,
+          _count: {
+            select: {
+              Ticket: true, // Number of tickets in the team
+              members: true, // Total member count
+            },
+          },
+          members: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  avatar: true,
+                },
+              },
+              role: true,
+            },
+            orderBy: {
+              joinedAt: "asc",
+            },
+          },
+          organizations: {
+            where: { organizationId },
+            select: { joinedAt: true },
+          },
         },
       });
-      console.log(teams);
-      res.json(teams);
+
+      // Transform the results
+      const result = teams.map((team) => {
+        const allMembers = team.members;
+        const currentUserMembership = allMembers.find(
+          (m) => m.user.userId === userId
+        );
+        const otherMembers = allMembers
+          .filter((m) => m.user.userId !== userId)
+          .slice(0, 3);
+
+        return {
+          id: team.id,
+          name: team.name,
+          ticketCount: team._count.Ticket,
+          totalMembers: team._count.members,
+          userRole: currentUserMembership?.role || null,
+          membersPreview: otherMembers.map((m) => ({
+            ...m.user,
+            role: m.role,
+          })),
+          organizationJoinDate: team.organizations[0]?.joinedAt,
+        };
+      });
+      console.log(result);
+      res.json(result);
     } catch (error) {
       console.log(error);
       res.json(error);
