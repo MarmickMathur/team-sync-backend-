@@ -22,6 +22,7 @@ router.get("/members", authMiddleware, getMembers);
 router.get("/teamCount", authMiddleware, verifyOrg, getTeamCount);
 router.get("/dashInfo", authMiddleware, verifyOrg, getInfo);
 router.get("/:id", authMiddleware, verifyOrg, getMemberInfo);
+
 router.get("/", authMiddleware, getOrganization);
 
 router.post("/team", authMiddleware, verifyOrg, addTeam);

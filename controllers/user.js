@@ -110,17 +110,22 @@ module.exports = {
   },
   getAssignedTickets: async (req, res) => {
     const uid = req.user.id;
+    const { organization_id } = req.query;
+    console.log(organization_id);
     try {
-      const result = await prisma.user.findFirst({
+      const tickets = await prisma.ticket.findMany({
         where: {
-          id: uid,
-        },
-        select: {
-          assignedTickets: true,
+          assigned: uid, // Ticket is assigned to the user
+          team: {
+            organizations: {
+              some: {
+                organizationId: organization_id, // Team belongs to the organization
+              },
+            },
+          },
         },
       });
-      console.log(result);
-      res.send(result);
+      res.json(tickets);
     } catch (error) {
       console.log(error);
       res.status(400).send(error.message);
