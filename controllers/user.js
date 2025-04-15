@@ -108,7 +108,24 @@ module.exports = {
       res.status(400).send(error.message);
     }
   },
-  getAssignedTickets: async (req, res) => {},
+  getAssignedTickets: async (req, res) => {
+    const uid = req.user.id;
+    try {
+      const result = await prisma.user.findFirst({
+        where: {
+          id: uid,
+        },
+        select: {
+          assignedTickets: true,
+        },
+      });
+      console.log(result);
+      res.send(result);
+    } catch (error) {
+      console.log(error);
+      res.status(400).send(error.message);
+    }
+  },
   getOrganization: async (req, res) => {
     const uid = req.user.id;
     try {

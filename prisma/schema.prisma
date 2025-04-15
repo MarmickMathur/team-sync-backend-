@@ -50,6 +50,7 @@ model TeamUser {
 
 model Ticket {
   id          String      @id @default(uuid())
+  title       String
   description String?
   status      Status
   created_at  DateTime    @default(now())
