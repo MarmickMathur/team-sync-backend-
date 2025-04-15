@@ -27,6 +27,33 @@ module.exports = {
       console.error("User not found or update failed:", error);
     }
   },
+  getOrgTeam: async (req, res) => {
+    const { organization_id } = req.query;
+    const uid = req.user.id;
+    try {
+      const result = await prisma.team.findMany({
+        where: {
+          members: { some: { userId: uid } },
+          organizations: { some: { organizationId: organization_id } },
+        },
+        select: {
+          id: true,
+          name: true,
+          _count: {
+            select: {
+              members: true, // Count of team members
+              Ticket: true, // Count of tickets assigned to team
+            },
+          },
+        },
+      });
+      // console.log(teamIds);
+      res.json(result);
+    } catch (error) {
+      console.log(error);
+      res.send(error);
+    }
+  },
   getInfo: async (req, res) => {
     const { organization_id } = req.query;
     console.log(organization_id);
@@ -81,6 +108,7 @@ module.exports = {
       res.status(400).send(error.message);
     }
   },
+  getAssignedTickets: async (req, res) => {},
   getOrganization: async (req, res) => {
     const uid = req.user.id;
     try {
@@ -201,7 +229,6 @@ module.exports = {
       res.json(error);
     }
   },
-
   //test this pls
   addTeam: async (req, res) => {
     const { team_name, user_id } = req.body;

@@ -111,7 +111,6 @@ module.exports = {
           teams: true,
         },
       });
-
       console.log(teams);
       res.json(teams);
     } catch (error) {

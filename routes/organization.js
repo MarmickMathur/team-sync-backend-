@@ -17,7 +17,7 @@ const {
 const authMiddleware = require("../middleware/jwtmiddleware");
 const verifyOrg = require("../middleware/verifyOrg");
 
-router.get("/teams", authMiddleware, getTeams);
+router.get("/allteams", authMiddleware, getTeams);
 router.get("/members", authMiddleware, getMembers);
 router.get("/teamCount", authMiddleware, verifyOrg, getTeamCount);
 router.get("/dashInfo", authMiddleware, verifyOrg, getInfo);
