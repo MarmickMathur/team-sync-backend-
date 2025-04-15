@@ -9,14 +9,18 @@ const {
   getUserFromEmail,
   addTeam,
   getTeamsCount,
+  getInfo,
 } = require("../controllers/user");
 
-router.patch("/", authMiddleware, patchUser);
-router.post("/organization", authMiddleware, addOrganization);
-router.post("/team", authMiddleware, addTeam);
-router.get("/organizations", authMiddleware, getOrganization);
-router.get("/teams", authMiddleware, getTeams);
-router.get("/teamsCount", authMiddleware, getTeamsCount);
-router.get("/:email", getUserFromEmail);
+router.use(authMiddleware);
+
+router.patch("/", patchUser);
+router.post("/organization", addOrganization);
+router.post("/team", addTeam);
+router.get("/organizations", getOrganization);
+router.get("/teams", getTeams);
+router.get("/teamsCount", getTeamsCount);
+router.get("/dashInfo" , getInfo);
+// router.get("/:email", getUserFromEmail);
 
 module.exports = router;

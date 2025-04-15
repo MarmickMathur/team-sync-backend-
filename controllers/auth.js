@@ -13,8 +13,8 @@ module.exports = {
         data: {
           password: hashPass,
           email,
-          
-          name: name??null
+
+          name: name ?? null,
         },
       });
       // res.send("ok created");
@@ -24,7 +24,7 @@ module.exports = {
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none": false
+        sameSite: process.env.NODE_ENV === "production" ? "none" : false,
       };
       res.status(200).cookie("authToken", token, options).json(newUser);
       next();
@@ -35,7 +35,7 @@ module.exports = {
     }
     res.send("error");
   },
-  login: async (req, res, next) => {
+  login: async (req, res) => {
     console.log(req.body);
     try {
       const { password, email } = req.body;
@@ -51,18 +51,15 @@ module.exports = {
           expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "none": false
+          sameSite: process.env.NODE_ENV === "production" ? "none" : false,
         };
         res.status(200).cookie("authToken", token, options).json(userFound);
       } else {
         res.send("invalid credentials");
       }
-      next();
     } catch (error) {
       console.log(error);
       res.send(error);
-      next();
     }
-    res.send("error");
   },
 };

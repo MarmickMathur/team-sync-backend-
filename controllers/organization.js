@@ -1,5 +1,7 @@
 const { getOrgRole } = require("../utility/orgUtils");
 const prisma = require("../utility/prismaLoader");
+const { getdashInfo } = require("../utility/user");
+const { getInfo } = require("./user");
 
 module.exports = {
   getOrganization: async (req, res) => {
@@ -15,7 +17,9 @@ module.exports = {
       req.json(error);
     }
   },
+  getInfo: async (req, res) => {
 
+  },
   getTeams: async (req, res) => {
     const oid = req.body.organization_id;
     try {

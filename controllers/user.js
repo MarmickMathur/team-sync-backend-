@@ -1,6 +1,9 @@
 const prisma = require("../utility/prismaLoader");
 const { hashPassword, checkPassword } = require("../utility/bcryptUtil");
 const { generateToken } = require("../utility/jwt");
+const ticket = require("./ticket");
+const organization = require("./organization");
+const { getdashInfo } = require("../utility/user");
 
 module.exports = {
   patchUser: async (req, res) => {
@@ -24,8 +27,59 @@ module.exports = {
       console.error("User not found or update failed:", error);
     }
   },
+  getInfo: async (req, res) => {
+    const { organization_id } = req.body;
 
-  //incomplete route
+    try {
+      const result = await prisma.user.findUnique({
+        where: {
+          id: req.user.id,
+          organizations: {
+            some: {
+              organizationId: organization_id,
+            },
+          },
+        },
+        include: {
+          assignedTickets: true,
+          createdTickets: true,
+          teams: {
+            include: {
+              team: {
+                include: {
+                  members: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      console.log(result);
+      const {
+        members,
+        dueSoon,
+        inprogress,
+        pieCharInfoPriority,
+        pieCharInfoStatus,
+      } = getdashInfo(result);
+      console.log(result.assignedTickets.length);
+      res.json({
+        teamCount: result.teams.length,
+        memberCount: members,
+        dueSoon,
+        inprogress,
+        completionPercentage:
+          (inprogress / result.assignedTickets.length) * 100 != null
+            ? (inprogress / result.assignedTickets.length) * 100
+            : 100,
+        pieCharInfoStatus,
+        pieCharInfoPriority,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(400).send(error.message);
+    }
+  },
   getOrganization: async (req, res) => {
     const uid = req.user.id;
     try {
