@@ -5,7 +5,7 @@ module.exports = {
     try {
       const ticket = await prisma.ticket.findFirst({
         where: {
-          id: req.params.ticket_id,
+          id: req.query.ticket_id,
         },
       });
       res.json(ticket);

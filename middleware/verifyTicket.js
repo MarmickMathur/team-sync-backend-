@@ -4,7 +4,7 @@ const prisma = require("../utility/prismaLoader");
 async function verifyTicket(req, res, next) {
   try {
     const uid = req.user.id;
-    const tid = req.body.ticket_id;
+    const tid = req.query.ticket_id;
     const result = await prisma.Ticket.findFirst({
       where: {
         id: tid,

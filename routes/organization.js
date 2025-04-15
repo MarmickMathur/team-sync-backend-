@@ -11,6 +11,8 @@ const {
   patchMember,
   patchOrg,
   getTeamCount,
+  getInfo,
+  getMemberInfo,
 } = require("../controllers/organization");
 const authMiddleware = require("../middleware/jwtmiddleware");
 const verifyOrg = require("../middleware/verifyOrg");
@@ -18,6 +20,8 @@ const verifyOrg = require("../middleware/verifyOrg");
 router.get("/teams", authMiddleware, getTeams);
 router.get("/members", authMiddleware, getMembers);
 router.get("/teamCount", authMiddleware, verifyOrg, getTeamCount);
+router.get("/dashInfo", authMiddleware, verifyOrg, getInfo);
+router.get("/:id", authMiddleware, verifyOrg, getMemberInfo);
 router.get("/", authMiddleware, getOrganization);
 
 router.post("/team", authMiddleware, verifyOrg, addTeam);

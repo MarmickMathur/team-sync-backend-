@@ -3,7 +3,7 @@ const prisma = require("../utility/prismaLoader");
 async function verifyTeam(req, res, next) {
   try {
     const uid = req.user.id;
-    const tid = req.body.team_id;
+    const tid = req.query.team_id;
     const result = await prisma.TeamUser.findFirst({
       where: {
         teamId: tid,

@@ -8,7 +8,7 @@ module.exports = {
     try {
       const organization = await prisma.Organization.findFirst({
         where: {
-          id: req.params.organization_id,
+          id: req.query.organization_id,
         },
       });
       res.json(organization);
@@ -18,10 +18,90 @@ module.exports = {
     }
   },
   getInfo: async (req, res) => {
+    console.log("starting here");
+    const { organization_id } = req.query;
+    console.log(organization_id);
+    try {
+      const result = await prisma.organization.findFirst({
+        where: {
+          id: organization_id,
+        },
+        include: {
+          teams: {
+            include: {
+              team: true,
+            },
+          },
+          members: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      console.log(result);
+      res.send("chal raha hai");
+    } catch (error) {
+      console.log(error);
+      res.status(401).send(error.message);
+    }
+  },
+  getMemberInfo: async (req, res) => {
+    const { organization_id } = req.query;
+    const { id } = req.params;
+    try {
+      const result = await prisma.user.findUnique({
+        where: {
+          id: id,
+          organizations: {
+            some: {
+              organizationId: organization_id,
+            },
+          },
+        },
+        include: {
+          assignedTickets: true,
+          createdTickets: true,
+          teams: {
+            include: {
+              team: {
+                include: {
+                  members: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      console.log(result);
+      const {
+        members,
+        dueSoon,
+        inprogress,
+        pieCharInfoPriority,
+        pieCharInfoStatus,
+      } = getdashInfo(result);
 
+      console.log(result.assignedTickets.length);
+      res.json({
+        teamCount: result.teams.length,
+        memberCount: members,
+        dueSoon,
+        inprogress,
+        completionPercentage:
+          (inprogress / result.assignedTickets.length) * 100 != null
+            ? (inprogress / result.assignedTickets.length) * 100
+            : 100,
+        pieCharInfoStatus,
+        pieCharInfoPriority,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(400).send(error.message);
+    }
   },
   getTeams: async (req, res) => {
-    const oid = req.params.organization_id;
+    const oid = req.query.organization_id;
     try {
       const { teams } = await prisma.Organization.findFirst({
         where: {
@@ -40,7 +120,7 @@ module.exports = {
     }
   },
   getTeamCount: async (req, res) => {
-    const { user_id, organization_id } = req.params;
+    const { user_id, organization_id } = req.query;
     try {
       const teams = await prisma.team.findMany({
         where: {
@@ -118,7 +198,7 @@ module.exports = {
     try {
       const { members } = await prisma.Organization.findUnique({
         where: {
-          id: req.params.organization_id,
+          id: req.query.organization_id,
         },
         include: {
           members: true,

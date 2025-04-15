@@ -28,7 +28,8 @@ module.exports = {
     }
   },
   getInfo: async (req, res) => {
-    const { organization_id } = req.params;
+    const { organization_id } = req.query;
+    console.log(organization_id);
     try {
       const result = await prisma.user.findUnique({
         where: {
@@ -160,7 +161,7 @@ module.exports = {
     }
   },
   getTeamsCount: async (req, res) => {
-    const { organization_id } = req.params;
+    const { organization_id } = req.query;
     try {
       const teams = await prisma.team.findMany({
         where: {

@@ -3,7 +3,7 @@ const prisma = require("../utility/prismaLoader");
 async function verifyOrg(req, res, next) {
   try {
     const uid = req.user.id;
-    const oid = req.body.organization_id;
+    const oid = req.query.organization_id;
     const result = await prisma.userOrganization.findMany({
       where: {
         organizationId: oid,

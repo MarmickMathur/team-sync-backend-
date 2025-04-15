@@ -15,12 +15,8 @@ const verifyTeam = require("../middleware/verifyTeam");
 //also add patch route for team
 router.get("/", authMiddleware, getTeam);
 router.get("/members", authMiddleware, getMembers);
-
 router.post("/member", authMiddleware, verifyTeam, addMember);
-
 router.delete("/member", authMiddleware, verifyTeam, deleteMember);
-
 router.patch("/member", authMiddleware, verifyTeam, patchMember);
 router.patch("/", authMiddleware, verifyTeam, patchTeam);
-
 module.exports = router;

@@ -4,7 +4,7 @@ module.exports = {
   getTeam: async (req, res) => {
     const team = await prisma.team.findUnique({
       where: {
-        id: req.params.team_id,
+        id: req.query.team_id,
       },
     });
     res.json(team);
@@ -38,7 +38,7 @@ module.exports = {
     try {
       const { members } = await prisma.team.findUnique({
         where: {
-          id: req.params.team_id,
+          id: req.query.team_id,
         },
         include: {
           members: true,
