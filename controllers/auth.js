@@ -24,6 +24,7 @@ module.exports = {
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none": false
       };
       res.status(200).cookie("authToken", token, options).json(newUser);
       next();
@@ -50,6 +51,7 @@ module.exports = {
           expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none": false
         };
         res.status(200).cookie("authToken", token, options).json(userFound);
       } else {
