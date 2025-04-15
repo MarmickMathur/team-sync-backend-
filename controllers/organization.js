@@ -35,6 +35,30 @@ module.exports = {
       res.json(error);
     }
   },
+  getTeamCount: async (req, res) => {
+    const { user_id, organization_id } = req.body;
+    try {
+      const teams = await prisma.team.findMany({
+        where: {
+          members: {
+            some: {
+              userId: user_id,
+            },
+          },
+          organizations: {
+            some: {
+              organizationId: organization_id,
+            },
+          },
+        },
+      });
+      console.log(teams);
+      res.json({ count: teams.length });
+    } catch (error) {
+      console.log(error);
+      res.json(error.message);
+    }
+  },
   addTeam: async (req, res) => {
     try {
       const newTeam = await prisma.Team.create({

@@ -105,6 +105,31 @@ module.exports = {
       res.send(error);
     }
   },
+  getTeamsCount: async (req, res) => {
+    const { organization_id } = req.body;
+    try {
+      const teams = await prisma.team.findMany({
+        where: {
+          members: {
+            some: {
+              userId: req.user.id,
+            },
+          },
+          organizations: {
+            some: {
+              organizationId: organization_id,
+            },
+          },
+        },
+      });
+      console.log(teams);
+      res.json({ count: teams.length });
+    } catch (error) {
+      console.log(error);
+      res.json(error);
+    }
+  },
+
   getUserFromEmail: async (req, res) => {
     const { email } = req.params;
     console.log(email);
