@@ -8,7 +8,7 @@ module.exports = {
     try {
       const organization = await prisma.Organization.findFirst({
         where: {
-          id: req.body.organization_id,
+          id: req.params.organization_id,
         },
       });
       res.json(organization);
@@ -21,7 +21,7 @@ module.exports = {
 
   },
   getTeams: async (req, res) => {
-    const oid = req.body.organization_id;
+    const oid = req.params.organization_id;
     try {
       const { teams } = await prisma.Organization.findFirst({
         where: {
@@ -40,7 +40,7 @@ module.exports = {
     }
   },
   getTeamCount: async (req, res) => {
-    const { user_id, organization_id } = req.body;
+    const { user_id, organization_id } = req.params;
     try {
       const teams = await prisma.team.findMany({
         where: {
@@ -118,7 +118,7 @@ module.exports = {
     try {
       const { members } = await prisma.Organization.findUnique({
         where: {
-          id: req.body.organization_id,
+          id: req.params.organization_id,
         },
         include: {
           members: true,

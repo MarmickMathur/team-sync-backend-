@@ -28,8 +28,7 @@ module.exports = {
     }
   },
   getInfo: async (req, res) => {
-    const { organization_id } = req.body;
-
+    const { organization_id } = req.params;
     try {
       const result = await prisma.user.findUnique({
         where: {
@@ -62,6 +61,7 @@ module.exports = {
         pieCharInfoPriority,
         pieCharInfoStatus,
       } = getdashInfo(result);
+
       console.log(result.assignedTickets.length);
       res.json({
         teamCount: result.teams.length,
@@ -160,7 +160,7 @@ module.exports = {
     }
   },
   getTeamsCount: async (req, res) => {
-    const { organization_id } = req.body;
+    const { organization_id } = req.params;
     try {
       const teams = await prisma.team.findMany({
         where: {
