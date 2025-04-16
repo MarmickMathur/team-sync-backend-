@@ -22,7 +22,7 @@ function startKeepAlive() {
     } catch (err) {
       console.error("[Keep-Alive] Ping failed:", err.message);
     }
-  }, 1 * 1 * 1000); // every 5 minutes
+  }, 5 * 60 * 1000); // every 5 minutes
 }
 
 app.get("/keepalive", (req, res) => {
