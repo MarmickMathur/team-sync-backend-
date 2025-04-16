@@ -46,8 +46,7 @@ if (!global.prisma) {
               actionType: "UPDATE",
               snapshot: updatedTicket,
               changes: {
-                old: oldTicket,
-                new: updatedTicket,
+                ...data,
               },
               ticketId: updatedTicket.id,
               actorId: updatedById || oldTicket.updatedById || null,
