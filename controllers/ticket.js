@@ -8,7 +8,14 @@ module.exports = {
         where: {
           id: req.query.ticket_id,
         },
+        include: {
+          creator_id: true,
+          assigned_to: true,
+          team: true,
+        },
       });
+      delete ticket.creator_id.password;
+      delete ticket.assigned_to.password;
       res.json(ticket);
     } catch (error) {
       console.log(error);
