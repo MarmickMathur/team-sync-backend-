@@ -3,6 +3,7 @@ module.exports = {
     let members = 0;
     let dueSoon = 0;
     let inprogress = 0;
+    let closed = 0;
     let pieCharInfoStatus = {
       to_do: 0,
       in_progress: 0,
@@ -33,6 +34,7 @@ module.exports = {
           pieCharInfoStatus.approval++;
           break;
         case "done":
+          closed++;
           pieCharInfoStatus.done++;
           break;
         default:
@@ -69,6 +71,7 @@ module.exports = {
       inprogress,
       pieCharInfoStatus,
       pieCharInfoPriority,
+      closed,
     };
   },
 };

@@ -11,7 +11,7 @@ async function verifyTicket(req, res, next) {
       },
       include: {
         creator_id: true, // get creator's user info
-        assinged_to: true, // get the organization info
+        assigned_to: true, // get the organization info
       },
     });
     // console.log(result);

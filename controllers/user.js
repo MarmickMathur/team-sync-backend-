@@ -88,6 +88,7 @@ module.exports = {
         inprogress,
         pieCharInfoPriority,
         pieCharInfoStatus,
+        closed,
       } = getdashInfo(result);
 
       console.log(result.assignedTickets.length);
@@ -97,8 +98,8 @@ module.exports = {
         dueSoon,
         inprogress,
         completionPercentage:
-          (inprogress / result.assignedTickets.length) * 100 != null
-            ? (inprogress / result.assignedTickets.length) * 100
+          (closed / result.assignedTickets.length) * 100 != null
+            ? (closed / result.assignedTickets.length) * 100
             : 100,
         pieCharInfoStatus,
         pieCharInfoPriority,
@@ -251,6 +252,14 @@ module.exports = {
       res.json(error);
     }
   },
+  // getReports: async (res, req) => {
+  //   const uid = res.user.id;
+  //   try {
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.send(error);
+  //   }
+  // },
   //test this pls
   addTeam: async (req, res) => {
     const { team_name, user_id } = req.body;

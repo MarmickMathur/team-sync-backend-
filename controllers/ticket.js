@@ -16,14 +16,11 @@ module.exports = {
   },
   addTicket: async (req, res) => {
     try {
-      const ticket = await prisma.ticket.create({
-        data: req.body,
-      });
-
+      const ticket = await prisma.ticket.createWithLog(req.body);
       res.json(ticket);
     } catch (error) {
       console.log(error);
-      res.json(error);
+      res.status(400).json(error);
     }
   },
   delTicket: async (req, res) => {
@@ -41,12 +38,17 @@ module.exports = {
   },
   patchTicket: async (req, res) => {
     try {
-      console.log(req.body.id);
-      const ticket = await prisma.ticket.update({
+      console.log(req.body.ticket_id);
+      const ticket_id = req.body.ticket_id;
+      delete req.body.ticket_id;
+      const ticket = await prisma.ticket.updateWithLog({
         where: {
-          id: req.body.id,
+          id: ticket_id,
         },
-        data: req.body,
+        data: {
+          ...req.body,
+          updatedById: req.user.id, // required for logging
+        },
       });
       res.json(ticket);
     } catch (error) {

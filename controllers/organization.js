@@ -40,7 +40,7 @@ module.exports = {
               createdAt: true,
             },
           },
-          assinged_to: {
+          assigned_to: {
             select: {
               id: true,
               email: true,
