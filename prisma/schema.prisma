@@ -53,7 +53,7 @@ model Ticket {
   id          String      @id @default(uuid())
   title       String?
   description String?
-  status      Status
+  status      Status      @default(to_do)
   created_at  DateTime    @default(now())
   deadline    DateTime?
   creator_id  User        @relation("TicketsOwned", fields: [creator], references: [id])
@@ -62,7 +62,7 @@ model Ticket {
   assigned    String?
   team        Team?       @relation("TeamAssigned", fields: [teamId], references: [id])
   teamId      String?
-  priority    Priority
+  priority    Priority    @default(low)
   logs        TicketLog[] @relation("logs")
   updatedById String? // Track user who last updated
   updatedBy   User?       @relation(fields: [updatedById], references: [id])

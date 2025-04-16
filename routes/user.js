@@ -12,7 +12,6 @@ const {
   getInfo,
   getAssignedTickets,
   getOrgTeam,
-  // getReports,
 } = require("../controllers/user");
 
 router.use(authMiddleware);
@@ -26,8 +25,6 @@ router.get("/teamsCount", getTeamsCount);
 router.get("/dashInfo", getInfo);
 router.get("/assignedTickets", getAssignedTickets);
 router.get("/teams", authMiddleware, getOrgTeam);
-// router.get("/report", authMiddleware, getReport);
-
 router.get("/:email", getUserFromEmail);
 
 module.exports = router;
