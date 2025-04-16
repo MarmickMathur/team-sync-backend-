@@ -1,6 +1,7 @@
 const prisma = require("../utility/prismaLoader");
 
 module.exports = {
+  getlogs: async (req, res) => {},
   getTicket: async (req, res) => {
     try {
       const ticket = await prisma.ticket.findFirst({

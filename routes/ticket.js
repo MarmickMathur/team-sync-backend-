@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express();
 const authMiddleware = require("../middleware/jwtmiddleware");
-const verfiyTicket = require("../middleware/verifyTicket");
 const {
   addTicket,
   delTicket,
   patchTicket,
   getTicket,
+  getlogs,
 } = require("../controllers/ticket");
+const verifyTicket = require("../middleware/verifyTicket");
 
 router.get("/", authMiddleware, getTicket);
 router.post("/", authMiddleware, addTicket);
-router.delete("/", authMiddleware, verfiyTicket, delTicket);
-router.patch("/", authMiddleware, verfiyTicket, patchTicket);
+router.get("/logs", authMiddleware, verifyTicket, getlogs);
+router.delete("/", authMiddleware, verifyTicket, delTicket);
+router.patch("/", authMiddleware, verifyTicket, patchTicket);
 
 module.exports = router;
