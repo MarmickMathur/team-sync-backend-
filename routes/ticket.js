@@ -12,7 +12,7 @@ const verifyTicket = require("../middleware/verifyTicket");
 
 router.get("/", authMiddleware, getTicket);
 router.post("/", authMiddleware, addTicket);
-router.get("/logs", authMiddleware, verifyTicket, getlogs);
+router.get("/logs", authMiddleware, getlogs);
 router.delete("/", authMiddleware, verifyTicket, delTicket);
 router.patch("/", authMiddleware, verifyTicket, patchTicket);
 

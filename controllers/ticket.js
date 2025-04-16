@@ -1,7 +1,32 @@
 const prisma = require("../utility/prismaLoader");
 
 module.exports = {
-  getlogs: async (req, res) => {},
+  getlogs: async (req, res) => {
+    const tid = req.query.ticket_id;
+    try {
+      const result = await prisma.TicketLog.findMany({
+        where: {
+          ticketId: tid,
+        },
+        include: {
+          actor: {
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              avatar: true,
+              createdAt: true,
+            },
+          },
+        },
+      });
+      // console.log(result);
+      res.json(result);
+    } catch (error) {
+      console.log(error);
+      res.status(400).send(error.message);
+    }
+  },
   getTicket: async (req, res) => {
     try {
       const ticket = await prisma.ticket.findFirst({
