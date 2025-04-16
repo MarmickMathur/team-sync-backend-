@@ -58,10 +58,10 @@ model Ticket {
   deadline    DateTime?
   creator_id  User        @relation("TicketsOwned", fields: [creator], references: [id])
   creator     String
-  assigned_to User        @relation("TicketAssigned", fields: [assigned], references: [id])
-  assigned    String
-  team        Team        @relation("TeamAssigned", fields: [teamId], references: [id])
-  teamId      String
+  assigned_to User?       @relation("TicketAssigned", fields: [assigned], references: [id])
+  assigned    String?
+  team        Team?       @relation("TeamAssigned", fields: [teamId], references: [id])
+  teamId      String?
   priority    Priority
   logs        TicketLog[] @relation("logs")
   updatedById String? // Track user who last updated

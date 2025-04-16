@@ -252,15 +252,7 @@ module.exports = {
       res.json(error);
     }
   },
-  // getReports: async (res, req) => {
-  //   const uid = res.user.id;
-  //   try {
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.send(error);
-  //   }
-  // },
-  //test this pls
+
   addTeam: async (req, res) => {
     const { team_name, user_id } = req.body;
     try {
